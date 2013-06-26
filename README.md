@@ -1,7 +1,7 @@
 KML Atlas Helper
 ======
 
-M-Atlas To KML Converter
+[M-Atlas](http://m-atlas.eu/ "M-Atlas website") To [KML](https://developers.google.com/kml/documentation/kmlreference "kml website") Converter
 
 Visual Moving Point Parsing
 -------------
@@ -15,4 +15,4 @@ TimeStamp Selection Support
 
 Automatic "GroupBy-Like" Aggregation on UserId
 -------------
-![userId](http://i40.tinypic.com/33xg394.jpg
+![userId](http://i40.tinypic.com/33xg394.jpg)
