@@ -116,13 +116,11 @@ public class KMLAtlas
                                             "UserId:" + idSplit
                                     );
 
-                        // Starts a new line-path
+                    // Starts a new line-path
                     LineString paths = pl.createAndSetLineString();
 
                     // Cicles all the points of the founded path
-                    int i = 0;
-                    
-                    for(; i < geom.numPoints(); i++)
+                    for(int i = 0; i < geom.numPoints(); i++)
                     {
                         // Add the next point
                         Point point = geom.getPoint(i);
