@@ -64,8 +64,6 @@ public class KMLAtlas
         // Open Postgress Connection
         Class.forName("org.postgresql.Driver");
         Connection conn = DriverManager.getConnection(URL, USER, PASS);
-            
-        // Add the geometry types to the connection. 
         ((org.postgresql.PGConnection) conn).addDataType("geometry", "org.postgis.PGgeometry");
         
         try (Statement statement = conn.createStatement()) 
@@ -114,13 +112,13 @@ public class KMLAtlas
                     Placemark pl = userFolder.createAndAddPlacemark()
                                     .withStyleUrl("#random_color")
                                     .withTimePrimitive(beginEndTimeSpan)
-                                    .withName("#" + geom.numPoints() + " path")
+                                    .withName("#" + resultSet.getRow() + " path")
                                     .withDescription(
                                             "Start: " + beginEndTimeSpan.getBegin() + "\n" +
                                             "Duration: " + duration.intValue() + " min | " +
                                             "Lenght: " + length.intValue() + " mt \n" +
                                             "End: " + beginEndTimeSpan.getEnd()+ "\n" +
-                                            "Points: " + points+ "\n" +
+                                            "Points: " + points + "\n" +
                                             "UserId: " + idSplit
                                     );
 
