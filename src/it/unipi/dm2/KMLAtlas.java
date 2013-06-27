@@ -8,16 +8,16 @@ import de.micromata.opengis.kml.v_2_2_0.KmlFactory;
 import de.micromata.opengis.kml.v_2_2_0.LineString;
 import de.micromata.opengis.kml.v_2_2_0.Placemark;
 import de.micromata.opengis.kml.v_2_2_0.Style;
-import de.micromata.opengis.kml.v_2_2_0.TimeStamp;
+import de.micromata.opengis.kml.v_2_2_0.TimeSpan;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -93,13 +93,19 @@ public class KMLAtlas
                 
                 // Retrieve data
                 int points = resultSet.getInt("n_points");
-                double length = resultSet.getDouble("length");
-                String duration = resultSet.getString("duration");
-                Date dateStart = resultSet.getDate("time_start");
+                Double length = resultSet.getDouble("length");
+                Double duration = resultSet.getDouble("duration");
+                Timestamp dateStart = resultSet.getTimestamp("time_start");
+                Timestamp dateEnd = new Timestamp(dateStart.getTime() + duration.intValue() * 60 * 1000);
                 Geometry geom = ((PGgeometry) resultSet.getObject("object")).getGeometry();
-                
+
                 // @see https://developers.google.com/kml/documentation/kmlreference#timestamp
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+                
+                // Generate span for path (start\end)
+                TimeSpan beginEndTimeSpan = (new TimeSpan())
+                                        .withBegin(dateFormat.format(dateStart))
+                                        .withEnd(dateFormat.format(dateEnd));
                 
                 // Only Linestring for paths
                 if (geom.getType() == Geometry.LINESTRING)
@@ -107,13 +113,15 @@ public class KMLAtlas
                     // Add placemark to the map for the path
                     Placemark pl = userFolder.createAndAddPlacemark()
                                     .withStyleUrl("#red")
-                                    .withTimePrimitive(new TimeStamp().withWhen(dateFormat.format(dateStart)))
-                                    .withName("#" + geom.numPoints() + " path ("+ points + " points)" )
+                                    .withTimePrimitive(beginEndTimeSpan)
+                                    .withName("#" + geom.numPoints() + " path")
                                     .withDescription(
-                                            "Date: " + dateFormat.format(dateStart) + "\n" +
-                                            "Duration: " + duration + " min | " +
-                                            "Lenght: " + Math.round(length) + " mt \n" +
-                                            "UserId:" + idSplit
+                                            "Start: " + beginEndTimeSpan.getBegin() + "\n" +
+                                            "Duration: " + duration.intValue() + " min | " +
+                                            "Lenght: " + length.intValue() + " mt \n" +
+                                            "End: " + beginEndTimeSpan.getEnd()+ "\n" +
+                                            "Points: " + points+ "\n" +
+                                            "UserId: " + idSplit
                                     );
 
                     // Starts a new line-path
