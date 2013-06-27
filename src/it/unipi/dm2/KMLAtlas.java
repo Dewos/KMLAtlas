@@ -58,8 +58,8 @@ public class KMLAtlas
         final Folder folder = document.createAndAddFolder().withName(table);
 
         // Styling
-        final Style style = document.createAndAddStyle().withId("red");
-        style.createAndSetLineStyle().withColorMode(ColorMode.RANDOM).withWidth(1.5);
+        final Style style = document.createAndAddStyle().withId("random_color");
+        style.createAndSetLineStyle().withColorMode(ColorMode.RANDOM).withWidth(1.6);
 
         // Open Postgress Connection
         Class.forName("org.postgresql.Driver");
@@ -112,7 +112,7 @@ public class KMLAtlas
                 {
                     // Add placemark to the map for the path
                     Placemark pl = userFolder.createAndAddPlacemark()
-                                    .withStyleUrl("#red")
+                                    .withStyleUrl("#random_color")
                                     .withTimePrimitive(beginEndTimeSpan)
                                     .withName("#" + geom.numPoints() + " path")
                                     .withDescription(
